@@ -1,18 +1,30 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Header from './components/Header/index.js'
-import About from './components/About/index.js'
+import Passcode from './components/Passcode'
 
 
 class App extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			requirePasscode: true,
+			isAuthenticated: false
+		}
+	}
+	onAuthentication() {
+		this.setState({
+			isAuthenticated: true
+		});
+	}
 	render() {
-		return (
-			<div>
-				<Header name="Micah Cowell" />
-				<About />
-			</div>
-		);
+		if (this.state.requirePasscode && !this.state.isAuthenticated) {
+			return (<Passcode onAuthentication={this.onAuthentication.bind(this)}/>);
+		} else {
+			return (
+				<h1>Welcome, Stranger</h1>
+			);
+		}
 	}
 }
 
