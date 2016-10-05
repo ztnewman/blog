@@ -2,13 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import Passcode from './components/Passcode'
-
+import Main from './components/Main'
 
 class App extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			requirePasscode: true,
+			requirePasscode: false,
 			isAuthenticated: false
 		}
 	}
@@ -19,10 +19,12 @@ class App extends React.Component {
 	}
 	render() {
 		if (this.state.requirePasscode && !this.state.isAuthenticated) {
-			return (<Passcode onAuthentication={this.onAuthentication.bind(this)}/>);
+			return (
+				<Passcode onAuthentication={this.onAuthentication.bind(this)} />
+			);
 		} else {
 			return (
-				<h1>Welcome, Stranger</h1>
+				<Main />
 			);
 		}
 	}
