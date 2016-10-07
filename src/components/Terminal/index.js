@@ -4,17 +4,19 @@ import { Link } from 'react-router';
 import Header from './Header';
 import History from './History';
 import Input from './Input';
-import Result from './Result';
 
 export default class Terminal extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			value: '',
-			commandHistory: [],
+			commandHistory: [], //consists of [command, result]
 			focusInput: true
 		}
 		this.user = `${location.host}:~ guest$`;
+		this.styles = {
+			height: window.innerHeight
+		}
 	}
 	setValue(target) {
 		this.setState({
@@ -60,7 +62,7 @@ export default class Terminal extends React.Component {
 	}
 	render() {
 		return (
-			<div className="terminal" onClick={this.focusInput.bind(this)}>
+			<div className="terminal" onClick={this.focusInput.bind(this)} style={this.styles}>
 				<Header />
 				<History
 					user={this.user}

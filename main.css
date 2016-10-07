@@ -3,21 +3,6 @@
 	font-size: 12px;
 }
 
-.app-container {
-	display: flex;
-  	align-items: center;
-  	justify-content: center;
-	background: #EFEFEF;
-}
-
-.terminal {
-	height: 400px;
-	width: 500px;
-	padding: 10px;
-	background: #FFFFFF;
-	border-radius: 5px;
-}
-
 .terminal__history__command {
 	margin-left: 5px;
 }

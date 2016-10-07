@@ -27176,9 +27176,13 @@
 
 			_this.state = {
 				value: '',
-				commandHistory: []
+				commandHistory: [], //consists of [command, result]
+				focusInput: true
 			};
 			_this.user = location.host + ':~ guest$';
+			_this.styles = {
+				height: window.innerHeight
+			};
 			return _this;
 		}
 
@@ -27199,19 +27203,27 @@
 			}
 		}, {
 			key: 'newCommand',
-			value: function newCommand() {
-				var count = this.state.commandCount + 1;
+			value: function newCommand(command) {
+				var commandHistory = this.state.commandHistory.slice();
+				var result = '';
+				if (command) {
+					result = '-bash: ' + command + ': command not found';
+				} else {
+					command = '';
+				}
+				var commandEntry = [command, result];
+				commandHistory.push(commandEntry);
 				this.setState({
 					value: '',
-					commandHistory: this.state.commandHistory.concat([this.state.value]),
-					commandCount: count
+					commandHistory: commandHistory,
+					commandCount: this.state.commandCount + 1
 				});
 			}
 		}, {
 			key: 'prevCommand',
 			value: function prevCommand(i) {
 				this.setState({
-					value: this.state.commandHistory[i]
+					value: this.state.commandHistory[i][0]
 				});
 			}
 		}, {
@@ -27222,11 +27234,18 @@
 				});
 			}
 		}, {
+			key: 'focusInput',
+			value: function focusInput() {
+				this.setState({
+					focusInput: true
+				});
+			}
+		}, {
 			key: 'render',
 			value: function render() {
 				return _react2.default.createElement(
 					'div',
-					{ className: 'terminal' },
+					{ className: 'terminal', onClick: this.focusInput.bind(this), style: this.styles },
 					_react2.default.createElement(_Header2.default, null),
 					_react2.default.createElement(_History2.default, {
 						user: this.user,
@@ -27234,7 +27253,8 @@
 					_react2.default.createElement(_Input2.default, {
 						user: this.user,
 						value: this.state.value,
-						commandCount: this.state.commandHistory.length,
+						focus: this.state.focusInput,
+						commandHistory: this.state.commandHistory,
 						clearHistory: this.clearHistory.bind(this),
 						newCommand: this.newCommand.bind(this),
 						prevCommand: this.prevCommand.bind(this),
@@ -27388,8 +27408,13 @@
 							),
 							_react2.default.createElement(
 								"span",
-								{ className: "terminal__history__entry" },
-								command
+								{ className: "terminal__history__command" },
+								command[0]
+							),
+							_react2.default.createElement(
+								"span",
+								{ className: "terminal__history__results" },
+								command[1]
 							)
 						);
 					}.bind(this))
@@ -27417,6 +27442,10 @@
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(97);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -27456,16 +27485,16 @@
 					case 38:
 						//Up
 						e.preventDefault();
-						if (this.props.commandCount > 0 && this.historyIndex < this.props.commandCount) {
-							this.props.prevCommand(this.props.commandCount - this.historyIndex - 1);
+						if (this.props.commandHistory.length > 0 && this.historyIndex < this.props.commandHistory.length) {
+							this.props.prevCommand(this.props.commandHistory.length - this.historyIndex - 1);
 							this.historyIndex++;
 						}
 						break;
 					case 40:
-						//down
+						//Down
 						e.preventDefault();
-						if (this.props.commandCount > 0 && this.historyIndex - 1 > 0) {
-							this.props.prevCommand(this.props.commandCount - this.historyIndex + 1);
+						if (this.props.commandHistory.length > 0 && this.historyIndex - 1 > 0) {
+							this.props.prevCommand(this.props.commandHistory.length - this.historyIndex + 1);
 							this.historyIndex--;
 						} else if (this.historyIndex == 1) {
 							this.props.clearCommand();
@@ -27483,7 +27512,14 @@
 						this.props.clearHistory();
 						break;
 					default:
-						this.props.newCommand();
+						this.props.newCommand(this.props.value);
+				}
+			}
+		}, {
+			key: 'componentWillReceiveProps',
+			value: function componentWillReceiveProps(nextProps) {
+				if (nextProps.focus) {
+					_reactDom2.default.findDOMNode(this.refs.commandInput).focus();
 				}
 			}
 		}, {
@@ -27499,6 +27535,7 @@
 					),
 					_react2.default.createElement('input', {
 						className: 'terminal__command__input',
+						ref: 'commandInput',
 						type: 'text',
 						value: this.props.value,
 						onChange: this.handleChange.bind(this),
