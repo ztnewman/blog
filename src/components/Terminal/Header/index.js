@@ -1,12 +1,11 @@
+import React from 'react';
 
 const currentDate = new Date();
 
-export default class Clock {
-	constructor() {
-		this.day = this.getDay();
-		this.month = this.getMonth();
-		this.date = this.getDate();
-		this.hour = this.getHour();
+export default class Header extends React.Component {
+	constructor(props) {
+		super(props);
+		this.time = `${this.getDay()} ${this.getMonth()} ${this.getDate()} ${this.getHour()}`;
 	}
 	getDay() {
 		const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -26,7 +25,11 @@ export default class Clock {
 	getHour() {
 		return `${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}`;
 	}
-	get time() {
-		return `${this.day} ${this.month} ${this.date} ${this.hour}`;
+	render() {
+		return(
+			<div className="terminal__header">
+				<span>Last login: {this.time} on ttys001</span>
+			</div>
+		);
 	}
 }

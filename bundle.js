@@ -62,17 +62,9 @@
 
 	var _Terminal2 = _interopRequireDefault(_Terminal);
 
-	var _About = __webpack_require__(237);
+	var _ErrorPage = __webpack_require__(239);
 
-	var _About2 = _interopRequireDefault(_About);
-
-	var _Contact = __webpack_require__(238);
-
-	var _Contact2 = _interopRequireDefault(_Contact);
-
-	var _Error = __webpack_require__(239);
-
-	var _Error2 = _interopRequireDefault(_Error);
+	var _ErrorPage2 = _interopRequireDefault(_ErrorPage);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -113,11 +105,8 @@
 	_reactDom2.default.render(_react2.default.createElement(
 		_reactRouter.Router,
 		{ history: _reactRouter.browserHistory },
-		_react2.default.createElement(
-			_reactRouter.Route,
-			{ path: '/', component: App },
-			_react2.default.createElement(_reactRouter.Route, { path: '*', components: { main: _Error2.default }, errorCode: '404' })
-		)
+		_react2.default.createElement(_reactRouter.Route, { path: '/', component: App }),
+		_react2.default.createElement(_reactRouter.Route, { path: '*', component: _ErrorPage2.default, errorCode: '404' })
 	), document.getElementById('app'));
 
 /***/ },
@@ -27157,9 +27146,17 @@
 
 	var _reactRouter = __webpack_require__(34);
 
-	var _Clock = __webpack_require__(236);
+	var _Header = __webpack_require__(236);
 
-	var _Clock2 = _interopRequireDefault(_Clock);
+	var _Header2 = _interopRequireDefault(_Header);
+
+	var _History = __webpack_require__(237);
+
+	var _History2 = _interopRequireDefault(_History);
+
+	var _Input = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./Input\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+
+	var _Input2 = _interopRequireDefault(_Input);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -27182,32 +27179,15 @@
 				commandHistory: []
 			};
 			_this.user = location.host + ':~ guest$';
-			_this.time = new _Clock2.default().time;
 			return _this;
 		}
 
 		_createClass(Terminal, [{
-			key: 'handleChange',
-			value: function handleChange(e) {
+			key: 'setValue',
+			value: function setValue(target) {
 				this.setState({
-					value: e.target.value
+					value: target
 				});
-			}
-		}, {
-			key: 'handleKeyDown',
-			value: function handleKeyDown(e) {
-				switch (e.keyCode) {
-					case 13:
-						//Enter
-						e.preventDefault();
-						this.enterCommand();
-						break;
-					case 38:
-						//Up
-						e.preventDefault();
-						this.previousCommand();
-						break;
-				}
 			}
 		}, {
 			key: 'enterCommand',
@@ -27243,50 +27223,16 @@
 				return _react2.default.createElement(
 					'div',
 					{ className: 'terminal' },
-					_react2.default.createElement(
-						'div',
-						{ className: 'terminal__time' },
-						'Last login: ',
-						this.time,
-						' on ttys001'
-					),
-					_react2.default.createElement(
-						'div',
-						{ className: 'terminal__history' },
-						this.state.commandHistory.map(function (command, i) {
-							return _react2.default.createElement(
-								'div',
-								{ key: i },
-								_react2.default.createElement(
-									'span',
-									null,
-									this.user
-								),
-								_react2.default.createElement(
-									'span',
-									{ className: 'terminal__history__entry' },
-									command
-								)
-							);
-						}.bind(this))
-					),
-					_react2.default.createElement(
-						'div',
-						{ className: 'terminal__command' },
-						_react2.default.createElement(
-							'span',
-							{ className: 'terminal__command__user' },
-							this.user
-						),
-						_react2.default.createElement('input', {
-							className: 'terminal__command__input',
-							type: 'text',
-							value: this.state.value,
-							onChange: this.handleChange.bind(this),
-							onKeyDown: this.handleKeyDown.bind(this),
-							autoFocus: true
-						})
-					)
+					_react2.default.createElement(_Header2.default, null),
+					_react2.default.createElement(_History2.default, {
+						user: this.user,
+						commandHistory: this.state.commandHistory }),
+					_react2.default.createElement(_Input2.default, {
+						user: this.user,
+						value: this.state.value,
+						enterCommand: this.enterCommand.bind(this),
+						previousCommand: this.previousCommand.bind(this),
+						setValue: this.setValue.bind(this) })
 				);
 			}
 		}]);
@@ -27298,7 +27244,7 @@
 
 /***/ },
 /* 236 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -27308,21 +27254,33 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var currentDate = new Date();
 
-	var Clock = function () {
-		function Clock() {
-			_classCallCheck(this, Clock);
+	var Header = function (_React$Component) {
+		_inherits(Header, _React$Component);
 
-			this.day = this.getDay();
-			this.month = this.getMonth();
-			this.date = this.getDate();
-			this.hour = this.getHour();
+		function Header(props) {
+			_classCallCheck(this, Header);
+
+			var _this = _possibleConstructorReturn(this, (Header.__proto__ || Object.getPrototypeOf(Header)).call(this, props));
+
+			_this.time = _this.getDay() + ' ' + _this.getMonth() + ' ' + _this.getDate() + ' ' + _this.getHour();
+			return _this;
 		}
 
-		_createClass(Clock, [{
+		_createClass(Header, [{
 			key: 'getDay',
 			value: function getDay() {
 				var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -27349,22 +27307,32 @@
 				return currentDate.getHours() + ':' + currentDate.getMinutes() + ':' + currentDate.getSeconds();
 			}
 		}, {
-			key: 'time',
-			get: function get() {
-				return this.day + ' ' + this.month + ' ' + this.date + ' ' + this.hour;
+			key: 'render',
+			value: function render() {
+				return _react2.default.createElement(
+					'div',
+					{ className: 'terminal__header' },
+					_react2.default.createElement(
+						'span',
+						null,
+						'Last login: ',
+						this.time,
+						' on ttys001'
+					)
+				);
 			}
 		}]);
 
-		return Clock;
-	}();
+		return Header;
+	}(_react2.default.Component);
 
-	exports.default = Clock;
+	exports.default = Header;
 
 /***/ },
 /* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 		value: true
@@ -27384,89 +27352,48 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var AboutModal = function (_React$Component) {
-		_inherits(AboutModal, _React$Component);
+	var History = function (_React$Component) {
+		_inherits(History, _React$Component);
 
-		function AboutModal(props) {
-			_classCallCheck(this, AboutModal);
+		function History(props) {
+			_classCallCheck(this, History);
 
-			return _possibleConstructorReturn(this, (AboutModal.__proto__ || Object.getPrototypeOf(AboutModal)).call(this, props));
+			return _possibleConstructorReturn(this, (History.__proto__ || Object.getPrototypeOf(History)).call(this, props));
 		}
 
-		_createClass(AboutModal, [{
-			key: 'render',
+		_createClass(History, [{
+			key: "render",
 			value: function render() {
 				return _react2.default.createElement(
-					'div',
-					null,
-					_react2.default.createElement(
-						'h2',
-						null,
-						'About'
-					)
+					"div",
+					{ className: "terminal__history" },
+					this.props.commandHistory.map(function (command, i) {
+						return _react2.default.createElement(
+							"div",
+							{ key: i },
+							_react2.default.createElement(
+								"span",
+								null,
+								this.props.user
+							),
+							_react2.default.createElement(
+								"span",
+								{ className: "terminal__history__entry" },
+								command
+							)
+						);
+					}.bind(this))
 				);
 			}
 		}]);
 
-		return AboutModal;
+		return History;
 	}(_react2.default.Component);
 
-	exports.default = AboutModal;
+	exports.default = History;
 
 /***/ },
-/* 238 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var ContactModal = function (_React$Component) {
-		_inherits(ContactModal, _React$Component);
-
-		function ContactModal(props) {
-			_classCallCheck(this, ContactModal);
-
-			return _possibleConstructorReturn(this, (ContactModal.__proto__ || Object.getPrototypeOf(ContactModal)).call(this, props));
-		}
-
-		_createClass(ContactModal, [{
-			key: 'render',
-			value: function render() {
-				return _react2.default.createElement(
-					'div',
-					null,
-					_react2.default.createElement(
-						'h2',
-						null,
-						'Contact'
-					)
-				);
-			}
-		}]);
-
-		return ContactModal;
-	}(_react2.default.Component);
-
-	exports.default = ContactModal;
-
-/***/ },
+/* 238 */,
 /* 239 */
 /***/ function(module, exports, __webpack_require__) {
 

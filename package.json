@@ -4,7 +4,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "webpack-dev-server --progress --colors"
+    "start": "node server.js"
   },
   "author": "Micah Cowell",
   "license": "MIT",

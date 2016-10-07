@@ -1,7 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router';
 
-import Clock from './lib/Clock';
+import Header from './Header';
+import History from './History';
+import Input from './Input';
 
 export default class Terminal extends React.Component {
 	constructor(props) {
@@ -11,78 +13,52 @@ export default class Terminal extends React.Component {
 			commandHistory: []
 		}
 		this.user = `${location.host}:~ guest$`;
-		this.time = new Clock().time;
 	}
-	handleChange(e) {
+	setValue(target) {
 		this.setState({
-			value: e.target.value
+			value: target
 		});
 	}
-	handleKeyDown(e) {
-		switch (e.keyCode) {
-			case 13: //Enter
-				e.preventDefault();
-				this.enterCommand();
-				break;
-			case 38: //Up
-				e.preventDefault();
-				this.previousCommand();
-				break;
-		}
+	clearHistory() {
+		this.setState({
+			value: '',
+			commandHistory: []
+		});
 	}
-	enterCommand() {
-		switch (this.state.value) {
-			case 'clear':
-				// clear terminal
-				this.setState({
-					value: '',
-					commandHistory: []
-				});
-				break;
-			default:
-				this.setState({
-					value: '',
-					commandHistory: this.state.commandHistory.concat([this.state.value])
-				});
-		}
+	newCommand() {
+		let count = this.state.commandCount + 1;
+		this.setState({
+			value: '',
+			commandHistory: this.state.commandHistory.concat([this.state.value]),
+			commandCount: count
+		});
 	}
-	previousCommand() {
-		let commandCount = this.state.commandHistory.length;
-		if (commandCount > 0) {
-			this.setState({
-				value: this.state.commandHistory[commandCount-1]
-			});
-		}
+	prevCommand(i) {
+		this.setState({
+			value: this.state.commandHistory[i]
+		});
+	}
+	clearCommand() {
+		this.setState({
+			value: ''
+		});
 	}
 	render() {
 		return (
 			<div className="terminal">
-				<div className="terminal__time">
-					Last login: {this.time} on ttys001
-				</div>
-				<div className="terminal__history">
-		        	{this.state.commandHistory.map(function(command, i){
-		    			return (
-							<div key={i}>
-								<span>{this.user}</span>
-								<span className="terminal__history__entry">
-									{command}
-								</span>
-							</div>
-						);
-		        	}.bind(this))}
-		        </div>
-				<div className="terminal__command">
-					<span className="terminal__command__user">{this.user}</span>
-					<input
-						className="terminal__command__input"
-				    	type="text"
-				    	value={this.state.value}
-				    	onChange={this.handleChange.bind(this)}
-						onKeyDown={this.handleKeyDown.bind(this)}
-						autoFocus
-					/>
-				</div>
+				<Header />
+				<History
+					user={this.user}
+					commandHistory={this.state.commandHistory} />
+				<Input
+					user={this.user}
+					value={this.state.value}
+					commandCount={this.state.commandHistory.length}
+					clearHistory={this.clearHistory.bind(this)}
+					newCommand={this.newCommand.bind(this)}
+					prevCommand={this.prevCommand.bind(this)}
+					clearCommand={this.clearCommand.bind(this)}
+					setValue={this.setValue.bind(this)} />
 			</div>
 		);
 	}
