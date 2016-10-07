@@ -22,8 +22,6 @@ class App extends React.Component {
 ReactDOM.render(
 	<Router history={browserHistory}>
 		<Route path="/" component={App}>
-			<Route path="about" components={{main:About}} />
-			<Route path="contact" components={{main:Contact}} />
 			<Route path="*" components={{main:Error}} errorCode="404" />
 		</Route>
 	</Router>,
