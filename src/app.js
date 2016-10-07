@@ -1,35 +1,31 @@
 import React from 'react';
-import { Router, Route, hashHistory } from 'react-router'
+import { Router, Route, browserHistory } from 'react-router'
 import ReactDOM from 'react-dom';
 
-import NavBar from './components/NavBar';
+import Terminal from './components/Terminal';
 import About from './components/About';
 import Contact from './components/Contact';
-
-import css from './style.js'
+import Error from './components/Error';
 
 class App extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			
-		}
-	}
 	render() {
+		const { nav, main } = this.props
 		return (
 			<div>
-				<NavBar />
+				<Terminal />
+				{main}
 			</div>
 		);
 	}
 }
 
 ReactDOM.render(
-	<Router history={hashHistory}>
-		<Route path="/" component={App} />
-		<Route path="/about" component={About} />
-		<Route path="/contact" component={Contact} />
-		<Route path="*" component={App} />
+	<Router history={browserHistory}>
+		<Route path="/" component={App}>
+			<Route path="about" components={{main:About}} />
+			<Route path="contact" components={{main:Contact}} />
+			<Route path="*" components={{main:Error}} errorCode="404" />
+		</Route>
 	</Router>,
 	document.getElementById('app')
 );
