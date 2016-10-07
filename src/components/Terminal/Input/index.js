@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 export default class Input extends React.Component {
 	constructor(props) {
@@ -17,15 +18,15 @@ export default class Input extends React.Component {
 				break;
 			case 38: //Up
 				e.preventDefault();
-				if (this.props.commandCount > 0 && this.historyIndex < this.props.commandCount) {
-					this.props.prevCommand(this.props.commandCount-this.historyIndex-1);
+				if (this.props.commandHistory.length > 0 && this.historyIndex < this.props.commandHistory.length) {
+					this.props.prevCommand(this.props.commandHistory.length-this.historyIndex-1);
 					this.historyIndex++;
 				}
 				break;
-			case 40: //down
+			case 40: //Down
 				e.preventDefault();
-				if (this.props.commandCount > 0 && this.historyIndex-1 > 0) {
-					this.props.prevCommand(this.props.commandCount-this.historyIndex+1);
+				if (this.props.commandHistory.length > 0 && this.historyIndex-1 > 0) {
+					this.props.prevCommand(this.props.commandHistory.length-this.historyIndex+1);
 					this.historyIndex--;
 				} else if (this.historyIndex == 1) {
 					this.props.clearCommand();
@@ -41,7 +42,12 @@ export default class Input extends React.Component {
 				this.props.clearHistory();
 				break;
 			default:
-				this.props.newCommand();
+				this.props.newCommand(this.props.value);
+		}
+	}
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.focus) {
+			ReactDOM.findDOMNode(this.refs.commandInput).focus();
 		}
 	}
 	render() {
@@ -50,6 +56,7 @@ export default class Input extends React.Component {
 				<span className="terminal__command__user">{this.user}</span>
 				<input
 					className="terminal__command__input"
+					ref="commandInput"
 					type="text"
 					value={this.props.value}
 					onChange={this.handleChange.bind(this)}

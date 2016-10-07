@@ -6,10 +6,16 @@ import Terminal from './components/Terminal';
 import ErrorPage from './components/ErrorPage';
 
 class App extends React.Component {
+	constructor() {
+		super();
+		this.styles = {
+			height: window.innerHeight
+		}
+	}
 	render() {
 		const { nav, main } = this.props
 		return (
-			<div>
+			<div className="app-container" style={this.styles}>
 				<Terminal />
 				{main}
 			</div>

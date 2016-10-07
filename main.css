@@ -3,11 +3,35 @@
 	font-size: 12px;
 }
 
-.terminal__history__entry {
+.app-container {
+	display: flex;
+  	align-items: center;
+  	justify-content: center;
+	background: #EFEFEF;
+}
+
+.terminal {
+	height: 400px;
+	width: 500px;
+	padding: 10px;
+	background: #FFFFFF;
+	border-radius: 5px;
+}
+
+.terminal__history__command {
 	margin-left: 5px;
 }
 
+.terminal__history__results {
+	display: block;
+}
+
+.terminal__command {
+	display: flex;
+}
+
 .terminal__command__input {
+	flex-grow: 1;
 	margin-left: 5px;
 	padding: 0;
 	border: 0;

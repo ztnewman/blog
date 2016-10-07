@@ -12,8 +12,11 @@ export default class History extends React.Component {
 					return (
 						<div key={i}>
 							<span>{this.user}</span>
-							<span className="terminal__history__entry">
-								{command}
+							<span className="terminal__history__command">
+								{command[0]}
+							</span>
+							<span className="terminal__history__results">
+								{command[1]}
 							</span>
 						</div>
 					);
