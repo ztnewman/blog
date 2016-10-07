@@ -27176,7 +27176,7 @@
 
 			_this.state = {
 				value: '',
-				commandHistory: [], //consists of [command, result]
+				commandHistory: [/*[command, result]*/],
 				focusInput: true
 			};
 			_this.user = location.host + ':~ guest$';

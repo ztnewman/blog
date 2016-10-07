@@ -3,6 +3,10 @@
 	font-size: 12px;
 }
 
+.terminal {
+	padding: 10px;
+}
+
 .terminal__history__command {
 	margin-left: 5px;
 }

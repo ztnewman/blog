@@ -10,7 +10,7 @@ export default class Terminal extends React.Component {
 		super(props);
 		this.state = {
 			value: '',
-			commandHistory: [], //consists of [command, result]
+			commandHistory: [/*[command, result]*/],
 			focusInput: true
 		}
 		this.user = `${location.host}:~ guest$`;
