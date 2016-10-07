@@ -27154,7 +27154,7 @@
 
 	var _History2 = _interopRequireDefault(_History);
 
-	var _Input = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./Input\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var _Input = __webpack_require__(238);
 
 	var _Input2 = _interopRequireDefault(_Input);
 
@@ -27190,32 +27190,36 @@
 				});
 			}
 		}, {
-			key: 'enterCommand',
-			value: function enterCommand() {
-				switch (this.state.value) {
-					case 'clear':
-						// clear terminal
-						this.setState({
-							value: '',
-							commandHistory: []
-						});
-						break;
-					default:
-						this.setState({
-							value: '',
-							commandHistory: this.state.commandHistory.concat([this.state.value])
-						});
-				}
+			key: 'clearHistory',
+			value: function clearHistory() {
+				this.setState({
+					value: '',
+					commandHistory: []
+				});
 			}
 		}, {
-			key: 'previousCommand',
-			value: function previousCommand() {
-				var commandCount = this.state.commandHistory.length;
-				if (commandCount > 0) {
-					this.setState({
-						value: this.state.commandHistory[commandCount - 1]
-					});
-				}
+			key: 'newCommand',
+			value: function newCommand() {
+				var count = this.state.commandCount + 1;
+				this.setState({
+					value: '',
+					commandHistory: this.state.commandHistory.concat([this.state.value]),
+					commandCount: count
+				});
+			}
+		}, {
+			key: 'prevCommand',
+			value: function prevCommand(i) {
+				this.setState({
+					value: this.state.commandHistory[i]
+				});
+			}
+		}, {
+			key: 'clearCommand',
+			value: function clearCommand() {
+				this.setState({
+					value: ''
+				});
 			}
 		}, {
 			key: 'render',
@@ -27230,8 +27234,11 @@
 					_react2.default.createElement(_Input2.default, {
 						user: this.user,
 						value: this.state.value,
-						enterCommand: this.enterCommand.bind(this),
-						previousCommand: this.previousCommand.bind(this),
+						commandCount: this.state.commandHistory.length,
+						clearHistory: this.clearHistory.bind(this),
+						newCommand: this.newCommand.bind(this),
+						prevCommand: this.prevCommand.bind(this),
+						clearCommand: this.clearCommand.bind(this),
 						setValue: this.setValue.bind(this) })
 				);
 			}
@@ -27358,7 +27365,10 @@
 		function History(props) {
 			_classCallCheck(this, History);
 
-			return _possibleConstructorReturn(this, (History.__proto__ || Object.getPrototypeOf(History)).call(this, props));
+			var _this = _possibleConstructorReturn(this, (History.__proto__ || Object.getPrototypeOf(History)).call(this, props));
+
+			_this.user = props.user;
+			return _this;
 		}
 
 		_createClass(History, [{
@@ -27374,7 +27384,7 @@
 							_react2.default.createElement(
 								"span",
 								null,
-								this.props.user
+								this.user
 							),
 							_react2.default.createElement(
 								"span",
@@ -27393,7 +27403,119 @@
 	exports.default = History;
 
 /***/ },
-/* 238 */,
+/* 238 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Input = function (_React$Component) {
+		_inherits(Input, _React$Component);
+
+		function Input(props) {
+			_classCallCheck(this, Input);
+
+			var _this = _possibleConstructorReturn(this, (Input.__proto__ || Object.getPrototypeOf(Input)).call(this, props));
+
+			_this.user = props.user;
+			_this.historyIndex = 0;
+			return _this;
+		}
+
+		_createClass(Input, [{
+			key: 'handleChange',
+			value: function handleChange(e) {
+				this.props.setValue(e.target.value);
+			}
+		}, {
+			key: 'handleKeyDown',
+			value: function handleKeyDown(e) {
+				switch (e.keyCode) {
+					case 13:
+						//Enter
+						e.preventDefault();
+						this.newCommand();
+						break;
+					case 38:
+						//Up
+						e.preventDefault();
+						if (this.props.commandCount > 0 && this.historyIndex < this.props.commandCount) {
+							this.props.prevCommand(this.props.commandCount - this.historyIndex - 1);
+							this.historyIndex++;
+						}
+						break;
+					case 40:
+						//down
+						e.preventDefault();
+						if (this.props.commandCount > 0 && this.historyIndex - 1 > 0) {
+							this.props.prevCommand(this.props.commandCount - this.historyIndex + 1);
+							this.historyIndex--;
+						} else if (this.historyIndex == 1) {
+							this.props.clearCommand();
+							this.historyIndex--;
+						}
+						break;
+				}
+			}
+		}, {
+			key: 'newCommand',
+			value: function newCommand() {
+				switch (this.props.value) {
+					case 'clear':
+						this.historyIndex = 0;
+						this.props.clearHistory();
+						break;
+					default:
+						this.props.newCommand();
+				}
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				return _react2.default.createElement(
+					'div',
+					{ className: 'terminal__command' },
+					_react2.default.createElement(
+						'span',
+						{ className: 'terminal__command__user' },
+						this.user
+					),
+					_react2.default.createElement('input', {
+						className: 'terminal__command__input',
+						type: 'text',
+						value: this.props.value,
+						onChange: this.handleChange.bind(this),
+						onKeyDown: this.handleKeyDown.bind(this),
+						autoComplete: false,
+						autoFocus: true
+					})
+				);
+			}
+		}]);
+
+		return Input;
+	}(_react2.default.Component);
+
+	exports.default = Input;
+
+/***/ },
 /* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
