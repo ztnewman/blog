@@ -6,8 +6,6 @@ export default class Input extends React.Component {
 		super(props);
 		this.user = props.user;
 	}
-
-	// handle input
 	handleChange(e) {
 		this.props.setValue(e.target.value);
 	}
@@ -27,6 +25,12 @@ export default class Input extends React.Component {
 				break;
 		}
 	}
+	getInputLength() {
+		if (this.props.value.length > 0) {
+			return this.props.value.length;
+		}
+		return 1;
+	}
 	focusInput() {
 		ReactDOM.findDOMNode(this.refs.commandInput).focus();
 	}
@@ -35,16 +39,18 @@ export default class Input extends React.Component {
 			<div className="terminal__command">
 				<span className="terminal__command__user">{this.user}</span>
 				<input
-					className="terminal__command__input"
+					className={this.props.value ? "terminal__command__input" : "terminal__command__input empty"}
 					ref="commandInput"
 					type="text"
 					value={this.props.value}
+					size={this.props.value.length}
 					onChange={this.handleChange.bind(this)}
 					onKeyDown={this.handleKeyDown.bind(this)}
 					autoComplete={false}
 					autoCorrect={false}
 					spellCheck={false}
 					autoFocus />
+				<span className="terminal__command__caret">&nbsp;</span>
 			</div>
 		);
 	}

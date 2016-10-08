@@ -17,6 +17,13 @@ export default class Terminal extends React.Component {
 	setValue(value) {
 		this.setState({value});
 	}
+	showHelp() {
+		this.setState({
+			value: 'help'
+		});
+	}
+
+	// handlers
 	handleClick(e) {
 		if (e.target.className == 'terminal') {
 			this.refs.Input.focusInput();
@@ -74,11 +81,17 @@ export default class Terminal extends React.Component {
 		});
 	}
 
-	showHelp() {
-		console.log('help!');
-		this.appendHistory('help');
+	// route paths
+	componentWillMount() {
+		switch (this.props.path) {
+			case '/about':
+				this.appendHistory('about');
+				break;
+			case '/contact':
+				this.appendHistory('contact');
+				break;
+		}
 	}
-
 	render() {
 		return (
 			<div

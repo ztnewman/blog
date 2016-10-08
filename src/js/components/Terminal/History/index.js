@@ -2,6 +2,7 @@ import React from 'react';
 
 import Invalid from './Output/Invalid';
 import Help from './Output/Help';
+import About from './Output/About';
 
 export default class History extends React.Component {
 	constructor(props) {
@@ -34,6 +35,8 @@ export default class History extends React.Component {
 							    	switch (cmd) {
 							        	case 'help':
 											return <Help />;
+										case 'about':
+											return <About />;
 										case '':
 											return;
 										default:

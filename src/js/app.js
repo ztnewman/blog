@@ -6,12 +6,13 @@ import Terminal from './components/Terminal';
 import ErrorPage from './components/ErrorPage';
 
 class App extends React.Component {
+	constructor(props) {
+		super(props);
+	}
 	render() {
-		const { nav, main } = this.props
 		return (
-			<div>
-				<Terminal />
-				{main}
+			<div className="app-container">
+				<Terminal path={this.props.route.path}/>
 			</div>
 		);
 	}
@@ -19,9 +20,8 @@ class App extends React.Component {
 
 ReactDOM.render(
 	<Router history={browserHistory}>
-		<Route path="/" component={App}>
-
-		</Route>
+		<Route path="/" component={App} />
+		<Route path="/about" component={App} />
 		<Route path="*" component={ErrorPage} errorCode="404" />
 	</Router>,
 	document.getElementById('app')
