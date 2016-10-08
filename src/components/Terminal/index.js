@@ -5,8 +5,8 @@ import History from './History';
 import Command from './Command';
 
 export default class Terminal extends React.Component {
-	constructor(props) {
-		super(props);
+	constructor() {
+		super();
 		this.state = {
 			value: '',
 			commandHistory: [/*[command, result]*/]
@@ -28,7 +28,7 @@ export default class Terminal extends React.Component {
 
 	// history navigation
 	lastHistory() {
-		let commandCount = this.props.commandHistory.length;
+		let commandCount = this.state.commandHistory.length;
 		if (commandCount > 0 && this.historyIndex < commandCount) {
 			let i = commandCount-this.historyIndex-1;
 			this.setState({
@@ -38,7 +38,7 @@ export default class Terminal extends React.Component {
 		}
 	}
 	nextHistory() {
-		let commandCount = this.props.commandHistory.length;
+		let commandCount = this.state.commandHistory.length;
 		if (commandCount > 0 && this.historyIndex-1 > 0) {
 			let i = commandCount-this.historyIndex+1;
 			this.setState({
@@ -46,7 +46,7 @@ export default class Terminal extends React.Component {
 			});
 			this.historyIndex--;
 		} else if (this.historyIndex == 1) {
-			this.props.setValue('');
+			this.setValue('');
 			this.historyIndex--;
 		}
 	}
@@ -79,7 +79,7 @@ export default class Terminal extends React.Component {
 	}
 	help() {
 		let result = 'This is the help screen';
-		this.appendHistory(this.props.value, result)
+		this.appendHistory(this.state.value, result)
 	}
 	invalid(value) {
 		let command = '';

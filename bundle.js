@@ -27167,10 +27167,10 @@
 	var Terminal = function (_React$Component) {
 		_inherits(Terminal, _React$Component);
 
-		function Terminal(props) {
+		function Terminal() {
 			_classCallCheck(this, Terminal);
 
-			var _this = _possibleConstructorReturn(this, (Terminal.__proto__ || Object.getPrototypeOf(Terminal)).call(this, props));
+			var _this = _possibleConstructorReturn(this, (Terminal.__proto__ || Object.getPrototypeOf(Terminal)).call(this));
 
 			_this.state = {
 				value: '',
@@ -27202,7 +27202,7 @@
 		}, {
 			key: 'lastHistory',
 			value: function lastHistory() {
-				var commandCount = this.props.commandHistory.length;
+				var commandCount = this.state.commandHistory.length;
 				if (commandCount > 0 && this.historyIndex < commandCount) {
 					var i = commandCount - this.historyIndex - 1;
 					this.setState({
@@ -27214,7 +27214,7 @@
 		}, {
 			key: 'nextHistory',
 			value: function nextHistory() {
-				var commandCount = this.props.commandHistory.length;
+				var commandCount = this.state.commandHistory.length;
 				if (commandCount > 0 && this.historyIndex - 1 > 0) {
 					var i = commandCount - this.historyIndex + 1;
 					this.setState({
@@ -27222,7 +27222,7 @@
 					});
 					this.historyIndex--;
 				} else if (this.historyIndex == 1) {
-					this.props.setValue('');
+					this.setValue('');
 					this.historyIndex--;
 				}
 			}
@@ -27262,7 +27262,7 @@
 			key: 'help',
 			value: function help() {
 				var result = 'This is the help screen';
-				this.appendHistory(this.props.value, result);
+				this.appendHistory(this.state.value, result);
 			}
 		}, {
 			key: 'invalid',
