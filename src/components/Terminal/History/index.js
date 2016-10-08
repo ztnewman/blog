@@ -7,6 +7,13 @@ export default class History extends React.Component {
 	constructor(props) {
 		super(props);
 		this.user = props.user;
+		this.invalidCounter = 0;
+	}
+	incrementInvalid() {
+		this.invalidCounter++;
+		if (this.invalidCounter == 3) {
+			this.props.showHelp();
+		}
 	}
 	render() {
 		return(
@@ -22,7 +29,7 @@ export default class History extends React.Component {
 								{(() => {
 									let cmd = value;
 									if (cmd.indexOf(' ') !== -1) {
-										cmd = cmd.substr(0, cmd.indexOf(' ' !== -1))
+										cmd = cmd.substr(0, cmd.indexOf(' '));
 									}
 							    	switch (cmd) {
 							        	case 'help':
@@ -30,7 +37,9 @@ export default class History extends React.Component {
 										case '':
 											return;
 										default:
-											return <Invalid command={cmd}/>;
+											return <Invalid
+													command={cmd}
+													increment={this.incrementInvalid.bind(this)} />;
 							    	}
 							    })()}
 							</div>

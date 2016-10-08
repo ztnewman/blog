@@ -6,7 +6,13 @@ button,hr,input{overflow:visible}audio,canvas,progress,video{display:inline-bloc
 }
 
 .terminal {
+	height: 100vh;
 	padding: 10px;
+	cursor: text;
+}
+
+.terminal:focus {
+	outline: 0;
 }
 
 .terminal__header {
@@ -17,8 +23,9 @@ button,hr,input{overflow:visible}audio,canvas,progress,video{display:inline-bloc
 	margin-left: 5px;
 }
 
-.terminal__history__results {
-
+.terminal__history__output__help {
+	font-size: 13px;
+	font-style: italic;
 }
 
 .terminal__command {
@@ -30,13 +37,12 @@ button,hr,input{overflow:visible}audio,canvas,progress,video{display:inline-bloc
 	margin-left: 5px;
 	padding: 0;
 	border: 0;
+	/* hide caret
+	color: transparent;
+	text-shadow: 0 0 0 black;
+	*/
 }
 
 .terminal__command__input:focus {
 	outline: 0;
-}
-
-.terminal__history__output__help {
-	font-size: 13px;
-	font-style: italic;
 }

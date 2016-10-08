@@ -11,7 +11,7 @@ export default class Terminal extends React.Component {
 			value: '',
 			commandHistory: []
 		}
-		this.user = `${location.host}:~ guest$`;
+		this.user = `guest@${location.host}:~$`;
 		this.historyIndex = 0;
 	}
 	setValue(value) {
@@ -21,6 +21,9 @@ export default class Terminal extends React.Component {
 		if (e.target.className == 'terminal') {
 			this.refs.Input.focusInput();
 		}
+	}
+	handleKeyDown(e) {
+		this.refs.Input.focusInput();
 	}
 	handleCommand(value) {
 		if (value == 'clear') {
@@ -71,13 +74,23 @@ export default class Terminal extends React.Component {
 		});
 	}
 
+	showHelp() {
+		console.log('help!');
+		this.appendHistory('help');
+	}
+
 	render() {
 		return (
-			<div className="terminal" onClick={this.handleClick.bind(this)} >
+			<div
+				className="terminal"
+				tabIndex="1"
+				onClick={this.handleClick.bind(this)}
+				onKeyDown={this.handleKeyDown.bind(this)} >
 				<Header />
 				<History
 					user={this.user}
-					commandHistory={this.state.commandHistory} />
+					commandHistory={this.state.commandHistory}
+					showHelp={this.showHelp.bind(this)} />
 				<Input
 					ref="Input"
 					user={this.user}
