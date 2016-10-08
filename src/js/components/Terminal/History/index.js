@@ -39,7 +39,7 @@ export default class History extends React.Component {
 										case 'about':
 											return <About />;
 											break;
-										case 'leaving':
+										case 'git':
 											return "Adios!";
 											break;
 										case '':

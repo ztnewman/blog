@@ -43,8 +43,8 @@ export default class Terminal extends React.Component {
 				this.clearHistory();
 				break;
 			case 'git':
+				this.appendHistory('git');
 				window.location.href = 'https://github.com/getmicah';
-				this.appendHistory('leaving');
 				break;
 			default:
 				this.appendHistory(value);
