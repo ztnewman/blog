@@ -27144,8 +27144,6 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactRouter = __webpack_require__(34);
-
 	var _Header = __webpack_require__(236);
 
 	var _Header2 = _interopRequireDefault(_Header);
@@ -27154,9 +27152,9 @@
 
 	var _History2 = _interopRequireDefault(_History);
 
-	var _Input = __webpack_require__(238);
+	var _Command = __webpack_require__(238);
 
-	var _Input2 = _interopRequireDefault(_Input);
+	var _Command2 = _interopRequireDefault(_Command);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -27176,10 +27174,10 @@
 
 			_this.state = {
 				value: '',
-				commandHistory: [/*[command, result]*/],
-				focusInput: true
+				commandHistory: [/*[command, result]*/]
 			};
 			_this.user = location.host + ':~ guest$';
+			_this.historyIndex = 0;
 			_this.styles = {
 				height: window.innerHeight
 			};
@@ -27187,11 +27185,101 @@
 		}
 
 		_createClass(Terminal, [{
+			key: 'handleClick',
+			value: function handleClick(e) {
+				if (e.target.className == 'terminal') {
+					this.refs.Input.focusInput();
+				}
+			}
+		}, {
 			key: 'setValue',
-			value: function setValue(target) {
+			value: function setValue(value) {
+				this.setState({ value: value });
+			}
+
+			// history navigation
+
+		}, {
+			key: 'lastHistory',
+			value: function lastHistory() {
+				var commandCount = this.props.commandHistory.length;
+				if (commandCount > 0 && this.historyIndex < commandCount) {
+					var i = commandCount - this.historyIndex - 1;
+					this.setState({
+						value: this.state.commandHistory[i][0]
+					});
+					this.historyIndex++;
+				}
+			}
+		}, {
+			key: 'nextHistory',
+			value: function nextHistory() {
+				var commandCount = this.props.commandHistory.length;
+				if (commandCount > 0 && this.historyIndex - 1 > 0) {
+					var i = commandCount - this.historyIndex + 1;
+					this.setState({
+						value: this.state.commandHistory[i][0]
+					});
+					this.historyIndex--;
+				} else if (this.historyIndex == 1) {
+					this.props.setValue('');
+					this.historyIndex--;
+				}
+			}
+		}, {
+			key: 'appendHistory',
+			value: function appendHistory(value, result) {
+				var commandHistory = this.state.commandHistory.slice();
+				var commandEntry = [value, result];
+				commandHistory.push(commandEntry);
 				this.setState({
-					value: target
+					value: '',
+					commandHistory: commandHistory,
+					commandCount: this.state.commandCount + 1
 				});
+			}
+
+			// command routing
+
+		}, {
+			key: 'handleCommand',
+			value: function handleCommand(value) {
+				switch (value) {
+					case 'clear':
+						this.historyIndex = 0;
+						this.clearHistory();
+						break;
+					case 'help':
+						this.help();
+						break;
+					case '':
+						this.blank();
+					default:
+						this.invalid(value);
+				}
+			}
+		}, {
+			key: 'help',
+			value: function help() {
+				var result = 'This is the help screen';
+				this.appendHistory(this.props.value, result);
+			}
+		}, {
+			key: 'invalid',
+			value: function invalid(value) {
+				var command = '';
+				if (value.indexOf(' ') !== -1) {
+					command = value.substr(0, value.indexOf(' '));
+				} else {
+					command = value;
+				}
+				var result = '-bash: ' + command + ': command not found';
+				this.appendHistory(value, result);
+			}
+		}, {
+			key: 'blank',
+			value: function blank() {
+				this.appendHistory('', '');
 			}
 		}, {
 			key: 'clearHistory',
@@ -27202,63 +27290,26 @@
 				});
 			}
 		}, {
-			key: 'newCommand',
-			value: function newCommand(command) {
-				var commandHistory = this.state.commandHistory.slice();
-				var result = '';
-				if (command) {
-					result = '-bash: ' + command + ': command not found';
-				} else {
-					command = '';
-				}
-				var commandEntry = [command, result];
-				commandHistory.push(commandEntry);
-				this.setState({
-					value: '',
-					commandHistory: commandHistory,
-					commandCount: this.state.commandCount + 1
-				});
-			}
-		}, {
-			key: 'prevCommand',
-			value: function prevCommand(i) {
-				this.setState({
-					value: this.state.commandHistory[i][0]
-				});
-			}
-		}, {
-			key: 'clearCommand',
-			value: function clearCommand() {
-				this.setState({
-					value: ''
-				});
-			}
-		}, {
-			key: 'focusInput',
-			value: function focusInput() {
-				this.setState({
-					focusInput: true
-				});
-			}
-		}, {
 			key: 'render',
 			value: function render() {
 				return _react2.default.createElement(
 					'div',
-					{ className: 'terminal', onClick: this.focusInput.bind(this), style: this.styles },
+					{
+						className: 'terminal',
+						onClick: this.handleClick.bind(this),
+						style: this.styles },
 					_react2.default.createElement(_Header2.default, null),
 					_react2.default.createElement(_History2.default, {
 						user: this.user,
 						commandHistory: this.state.commandHistory }),
-					_react2.default.createElement(_Input2.default, {
+					_react2.default.createElement(_Command2.default, {
+						ref: 'Input',
 						user: this.user,
 						value: this.state.value,
-						focus: this.state.focusInput,
+						handleCommand: this.handleCommand.bind(this),
 						commandHistory: this.state.commandHistory,
-						clearHistory: this.clearHistory.bind(this),
-						newCommand: this.newCommand.bind(this),
-						prevCommand: this.prevCommand.bind(this),
-						clearCommand: this.clearCommand.bind(this),
+						lastHistory: this.lastHistory.bind(this),
+						nextHistory: this.nextHistory.bind(this),
 						setValue: this.setValue.bind(this) })
 				);
 			}
@@ -27341,7 +27392,7 @@
 					{ className: 'terminal__header' },
 					_react2.default.createElement(
 						'span',
-						null,
+						{ className: 'terminal__header__time' },
 						'Last login: ',
 						this.time,
 						' on ttys001'
@@ -27412,7 +27463,7 @@
 								command[0]
 							),
 							_react2.default.createElement(
-								"span",
+								"div",
 								{ className: "terminal__history__results" },
 								command[1]
 							)
@@ -27455,20 +27506,22 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var Input = function (_React$Component) {
-		_inherits(Input, _React$Component);
+	var Command = function (_React$Component) {
+		_inherits(Command, _React$Component);
 
-		function Input(props) {
-			_classCallCheck(this, Input);
+		function Command(props) {
+			_classCallCheck(this, Command);
 
-			var _this = _possibleConstructorReturn(this, (Input.__proto__ || Object.getPrototypeOf(Input)).call(this, props));
+			var _this = _possibleConstructorReturn(this, (Command.__proto__ || Object.getPrototypeOf(Command)).call(this, props));
 
 			_this.user = props.user;
-			_this.historyIndex = 0;
 			return _this;
 		}
 
-		_createClass(Input, [{
+		// handle input
+
+
+		_createClass(Command, [{
 			key: 'handleChange',
 			value: function handleChange(e) {
 				this.props.setValue(e.target.value);
@@ -27480,47 +27533,24 @@
 					case 13:
 						//Enter
 						e.preventDefault();
-						this.newCommand();
+						this.props.handleCommand(this.props.value);
 						break;
 					case 38:
 						//Up
 						e.preventDefault();
-						if (this.props.commandHistory.length > 0 && this.historyIndex < this.props.commandHistory.length) {
-							this.props.prevCommand(this.props.commandHistory.length - this.historyIndex - 1);
-							this.historyIndex++;
-						}
+						this.props.lastHistory();
 						break;
 					case 40:
 						//Down
 						e.preventDefault();
-						if (this.props.commandHistory.length > 0 && this.historyIndex - 1 > 0) {
-							this.props.prevCommand(this.props.commandHistory.length - this.historyIndex + 1);
-							this.historyIndex--;
-						} else if (this.historyIndex == 1) {
-							this.props.clearCommand();
-							this.historyIndex--;
-						}
+						this.props.nextHistory();
 						break;
 				}
 			}
 		}, {
-			key: 'newCommand',
-			value: function newCommand() {
-				switch (this.props.value) {
-					case 'clear':
-						this.historyIndex = 0;
-						this.props.clearHistory();
-						break;
-					default:
-						this.props.newCommand(this.props.value);
-				}
-			}
-		}, {
-			key: 'componentWillReceiveProps',
-			value: function componentWillReceiveProps(nextProps) {
-				if (nextProps.focus) {
-					_reactDom2.default.findDOMNode(this.refs.commandInput).focus();
-				}
+			key: 'focusInput',
+			value: function focusInput() {
+				_reactDom2.default.findDOMNode(this.refs.commandInput).focus();
 			}
 		}, {
 			key: 'render',
@@ -27541,16 +27571,17 @@
 						onChange: this.handleChange.bind(this),
 						onKeyDown: this.handleKeyDown.bind(this),
 						autoComplete: false,
-						autoFocus: true
-					})
+						autoCorrect: false,
+						spellCheck: false,
+						autoFocus: true })
 				);
 			}
 		}]);
 
-		return Input;
+		return Command;
 	}(_react2.default.Component);
 
-	exports.default = Input;
+	exports.default = Command;
 
 /***/ },
 /* 239 */
