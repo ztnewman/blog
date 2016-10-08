@@ -27217,8 +27217,8 @@
 						this.clearHistory();
 						break;
 					case 'git':
+						this.appendHistory('git');
 						window.location.href = 'https://github.com/getmicah';
-						this.appendHistory('leaving');
 						break;
 					default:
 						this.appendHistory(value);
@@ -27501,7 +27501,7 @@
 										case 'about':
 											return _react2.default.createElement(_About2.default, null);
 											break;
-										case 'leaving':
+										case 'git':
 											return "Adios!";
 											break;
 										case '':
