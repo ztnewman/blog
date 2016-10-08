@@ -37,6 +37,8 @@ export default class History extends React.Component {
 											return <Help />;
 										case 'about':
 											return <About />;
+										case 'git':
+											window.location.href = 'https://github.com/getmicah';
 										case '':
 											return;
 										default:

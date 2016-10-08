@@ -27489,6 +27489,8 @@
 											return _react2.default.createElement(_Help2.default, null);
 										case 'about':
 											return _react2.default.createElement(_About2.default, null);
+										case 'git':
+											window.location.href = 'https://github.com/getmicah';
 										case '':
 											return;
 										default:
