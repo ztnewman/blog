@@ -3,7 +3,7 @@ import React from 'react';
 export default class Help extends React.Component {
 	render() {
 		return(
-			<div className="terminal__history__results__help">
+			<div className="terminal__history__output__help">
 				<p>Hello there,</p>
 				<p>This is my website.</p>
 				<p>To interact with it you must enter in commands.</p>
