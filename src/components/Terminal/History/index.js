@@ -9,7 +9,6 @@ export default class History extends React.Component {
 		this.user = props.user;
 	}
 	render() {
-		console.log(this.props.commandHistory[0]);
 		return(
 			<div className="terminal__history">
 				{this.props.commandHistory.map(function(value, i){
@@ -21,13 +20,17 @@ export default class History extends React.Component {
 							</span>
 							<div className="terminal__history__output">
 								{(() => {
-							    	switch (value) {
+									let cmd = value;
+									if (cmd.indexOf(' ') !== -1) {
+										cmd = cmd.substr(0, cmd.indexOf(' ' !== -1))
+									}
+							    	switch (cmd) {
 							        	case 'help':
 											return <Help />;
 										case '':
 											return;
 										default:
-											return <Invalid value={value}/>;
+											return <Invalid command={cmd}/>;
 							    	}
 							    })()}
 							</div>

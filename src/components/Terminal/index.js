@@ -23,7 +23,6 @@ export default class Terminal extends React.Component {
 		}
 	}
 	handleCommand(value) {
-		console.log(typeof value);
 		if (value == 'clear') {
 			this.historyIndex = 0;
 			this.clearHistory();
