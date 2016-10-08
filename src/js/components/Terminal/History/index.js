@@ -35,10 +35,16 @@ export default class History extends React.Component {
 							    	switch (cmd) {
 							        	case 'help':
 											return <Help />;
+											break;
 										case 'about':
 											return <About />;
+											break;
+										case 'leaving':
+											return "Adios!";
+											break;
 										case '':
 											return;
+											break;
 										default:
 											return <Invalid
 													command={cmd}

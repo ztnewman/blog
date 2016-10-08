@@ -27207,11 +27207,21 @@
 		}, {
 			key: 'handleCommand',
 			value: function handleCommand(value) {
-				if (value == 'clear') {
-					this.historyIndex = 0;
-					this.clearHistory();
-				} else {
-					this.appendHistory(value);
+				var cmd = value;
+				if (cmd.indexOf(' ') !== -1) {
+					cmd = cmd.substr(0, cmd.indexOf(' '));
+				}
+				switch (cmd) {
+					case 'clear':
+						this.historyIndex = 0;
+						this.clearHistory();
+						break;
+					case 'git':
+						window.location.href = 'https://github.com/getmicah';
+						this.appendHistory('leaving');
+						break;
+					default:
+						this.appendHistory(value);
 				}
 			}
 
@@ -27487,12 +27497,16 @@
 									switch (cmd) {
 										case 'help':
 											return _react2.default.createElement(_Help2.default, null);
+											break;
 										case 'about':
 											return _react2.default.createElement(_About2.default, null);
-										case 'git':
-											window.location.href = 'https://github.com/getmicah';
+											break;
+										case 'leaving':
+											return "Adios!";
+											break;
 										case '':
 											return;
+											break;
 										default:
 											return _react2.default.createElement(_Invalid2.default, {
 												command: cmd,
