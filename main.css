@@ -16,7 +16,7 @@
 }
 
 .terminal__history__results {
-	
+
 }
 
 .terminal__command {
@@ -32,4 +32,9 @@
 
 .terminal__command__input:focus {
 	outline: 0;
+}
+
+.terminal__history__output__help {
+	font-size: 13px;
+	font-style: italic;
 }
