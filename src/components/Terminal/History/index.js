@@ -15,9 +15,9 @@ export default class History extends React.Component {
 							<span className="terminal__history__command">
 								{command[0]}
 							</span>
-							<span className="terminal__history__results">
+							<div className="terminal__history__results">
 								{command[1]}
-							</span>
+							</div>
 						</div>
 					);
 				}.bind(this))}

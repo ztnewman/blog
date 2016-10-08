@@ -28,7 +28,7 @@ export default class Header extends React.Component {
 	render() {
 		return(
 			<div className="terminal__header">
-				<span>Last login: {this.time} on ttys001</span>
+				<span className="terminal__header__time">Last login: {this.time} on ttys001</span>
 			</div>
 		);
 	}

@@ -7,12 +7,16 @@
 	padding: 10px;
 }
 
+.terminal__header {
+	display: inline-block;
+}
+
 .terminal__history__command {
 	margin-left: 5px;
 }
 
 .terminal__history__results {
-	display: block;
+	
 }
 
 .terminal__command {

@@ -1,43 +1,58 @@
 import React from 'react';
-import { Link } from 'react-router';
 
 import Header from './Header';
 import History from './History';
-import Input from './Input';
+import Command from './Command';
 
 export default class Terminal extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			value: '',
-			commandHistory: [/*[command, result]*/],
-			focusInput: true
+			commandHistory: [/*[command, result]*/]
 		}
 		this.user = `${location.host}:~ guest$`;
+		this.historyIndex = 0;
 		this.styles = {
 			height: window.innerHeight
 		}
 	}
-	setValue(target) {
-		this.setState({
-			value: target
-		});
-	}
-	clearHistory() {
-		this.setState({
-			value: '',
-			commandHistory: []
-		});
-	}
-	newCommand(command) {
-		let commandHistory = this.state.commandHistory.slice();
-		let result = ''
-		if (command) {
-			result = `-bash: ${command}: command not found`;
-		} else {
-			command = '';
+	handleClick(e) {
+		if (e.target.className == 'terminal') {
+			this.refs.Input.focusInput();
 		}
-		let commandEntry = [command, result];
+	}
+	setValue(value) {
+		this.setState({value});
+	}
+
+	// history navigation
+	lastHistory() {
+		let commandCount = this.props.commandHistory.length;
+		if (commandCount > 0 && this.historyIndex < commandCount) {
+			let i = commandCount-this.historyIndex-1;
+			this.setState({
+				value: this.state.commandHistory[i][0]
+			});
+			this.historyIndex++;
+		}
+	}
+	nextHistory() {
+		let commandCount = this.props.commandHistory.length;
+		if (commandCount > 0 && this.historyIndex-1 > 0) {
+			let i = commandCount-this.historyIndex+1;
+			this.setState({
+				value: this.state.commandHistory[i][0]
+			});
+			this.historyIndex--;
+		} else if (this.historyIndex == 1) {
+			this.props.setValue('');
+			this.historyIndex--;
+		}
+	}
+	appendHistory(value, result) {
+		let commandHistory = this.state.commandHistory.slice();
+		let commandEntry=[value, result];
 		commandHistory.push(commandEntry);
 		this.setState({
 			value: '',
@@ -45,37 +60,66 @@ export default class Terminal extends React.Component {
 			commandCount: this.state.commandCount + 1
 		});
 	}
-	prevCommand(i) {
+
+	// command routing
+	handleCommand(value) {
+		switch (value) {
+			case 'clear':
+				this.historyIndex = 0;
+				this.clearHistory();
+				break;
+			case 'help':
+				this.help();
+				break;
+			case '':
+				this.blank();
+			default:
+				this.invalid(value);
+		}
+	}
+	help() {
+		let result = 'This is the help screen';
+		this.appendHistory(this.props.value, result)
+	}
+	invalid(value) {
+		let command = '';
+		if  (value.indexOf(' ') !== -1) {
+			command = value.substr(0, value.indexOf(' '));
+		}
+		else {
+			command = value;
+		}
+		let result = `-bash: ${command}: command not found`;
+		this.appendHistory(value, result);
+	}
+	blank() {
+		this.appendHistory('', '');
+	}
+	clearHistory() {
 		this.setState({
-			value: this.state.commandHistory[i][0]
+			value: '',
+			commandHistory: []
 		});
 	}
-	clearCommand() {
-		this.setState({
-			value: ''
-		});
-	}
-	focusInput() {
-		this.setState({
-			focusInput: true
-		});
-	}
+
 	render() {
 		return (
-			<div className="terminal" onClick={this.focusInput.bind(this)} style={this.styles}>
+			<div
+				className="terminal"
+				onClick={this.handleClick.bind(this)}
+				style={this.styles} >
 				<Header />
 				<History
 					user={this.user}
 					commandHistory={this.state.commandHistory} />
-				<Input
+				<Command
+					ref="Input"
 					user={this.user}
 					value={this.state.value}
-					focus={this.state.focusInput}
+					handleCommand={this.handleCommand.bind(this)}
 					commandHistory={this.state.commandHistory}
-					clearHistory={this.clearHistory.bind(this)}
-					newCommand={this.newCommand.bind(this)}
-					prevCommand={this.prevCommand.bind(this)}
-					clearCommand={this.clearCommand.bind(this)}
+					lastHistory={this.lastHistory.bind(this)}
+					nextHistory={this.nextHistory.bind(this)}
 					setValue={this.setValue.bind(this)} />
 			</div>
 		);
