@@ -33,11 +33,20 @@ export default class Terminal extends React.Component {
 		this.refs.Input.focusInput();
 	}
 	handleCommand(value) {
-		if (value == 'clear') {
-			this.historyIndex = 0;
-			this.clearHistory();
-		} else {
-			this.appendHistory(value);
+		let cmd = value;
+		if (cmd.indexOf(' ') !== -1) {
+			cmd = cmd.substr(0, cmd.indexOf(' '));
+		}
+		switch (cmd) {
+			case 'clear':
+				this.historyIndex = 0;
+				this.clearHistory();
+				break;
+			case 'git'
+				window.location.href = 'https://github.com/getmicah';
+				break;
+			default:
+				this.appendHistory(value);
 		}
 	}
 
