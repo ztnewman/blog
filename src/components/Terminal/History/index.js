@@ -2,7 +2,7 @@ import React from 'react';
 
 import Invalid from './Output/Invalid';
 import Help from './Output/Help';
-import About from './Output/About';
+import ChangeDirectory from './Output/ChangeDirectory';
 
 export default class History extends React.Component {
 	constructor(props) {
@@ -36,10 +36,12 @@ export default class History extends React.Component {
 							        	case 'help':
 											return <Help />;
 											break;
-										case 'about':
-											return <About />;
+										case 'cd':
+											return <ChangeDirectory
+													value={value} />;
 											break;
 										case 'git':
+											window.location.href = 'https://github.com/getmicah';
 											return "Adios!";
 											break;
 										case '':
