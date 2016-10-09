@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 export default class Input extends React.Component {
 	constructor(props) {
 		super(props);
-		this.user = props.user;
+		this.user = this.props.getUser();
 	}
 	handleChange(e) {
 		this.props.setValue(e.target.value);

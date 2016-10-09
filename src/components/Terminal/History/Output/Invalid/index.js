@@ -3,13 +3,18 @@ import React from 'react';
 export default class Invalid extends React.Component {
 	constructor(props) {
 		super(props);
+		this.command = props.command;
+		this.value = props.value;
 	}
-	componentWillMount() {
-		this.props.increment();
+	getError() {
+		if (this.command == 'cd') {
+			return `${this.props.value}: No such file or directory`;
+		}
+		return 'command not found';
 	}
 	render() {
 		return(
-			<span>{`-bash: ${this.props.command}: command not found`}</span>
+			<span>-bash: {this.command}: {this.getError()}</span>
 		);
 	}
 }

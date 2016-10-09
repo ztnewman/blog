@@ -3,24 +3,37 @@ import React from 'react';
 import Header from './Header';
 import History from './History';
 import Input from './Input';
+import Invalid from './History/Output/Invalid';
+
+const FOLDERS = ['~', 'about', 'contact'];
 
 export default class Terminal extends React.Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 		this.state = {
 			value: '',
 			commandHistory: []
 		}
-		this.user = `guest@${location.host}:~$`;
+		this.currentDirectory = props.path;
 		this.historyIndex = 0;
 	}
 	setValue(value) {
 		this.setState({value});
 	}
-	showHelp() {
-		this.setState({
-			value: 'help'
-		});
+	setCurrentDirectory(dir) {
+		this.currentDirectory = dir;
+	}
+	isValidDirectory(dir) {
+		if (!dir)
+			dir = this.currentDirectory;
+		return FOLDERS.indexOf(dir) > -1;
+	}
+	getUser() {
+		if (this.isValidDirectory() && this.currentDirectory != '~') {
+			return `guest@${location.host}:~/${this.currentDirectory}$`
+		} else {
+			return `guest@${location.host}:~$`;
+		}
 	}
 
 	// handlers
@@ -87,17 +100,6 @@ export default class Terminal extends React.Component {
 		});
 	}
 
-	// route paths
-	componentWillMount() {
-		switch (this.props.path) {
-			case '/about':
-				this.appendHistory('about');
-				break;
-			case '/contact':
-				this.appendHistory('contact');
-				break;
-		}
-	}
 	render() {
 		return (
 			<div
@@ -106,14 +108,22 @@ export default class Terminal extends React.Component {
 				onClick={this.handleClick.bind(this)}
 				onKeyDown={this.handleKeyDown.bind(this)} >
 				<Header />
+				{this.isValidDirectory(this.props.path) ? null :
+					<div className="terminal__invalidDirectory">
+						<Invalid
+							command="cd"
+							value={`${this.props.path}`} />
+					</div>}
 				<History
-					user={this.user}
 					commandHistory={this.state.commandHistory}
-					showHelp={this.showHelp.bind(this)} />
+					currentDirectory={this.currentDirectory}
+					cd={this.setCurrentDirectory.bind(this)}
+					isValidDirectory={this.isValidDirectory.bind(this)}
+					getUser={this.getUser.bind(this)} />
 				<Input
 					ref="Input"
-					user={this.user}
 					value={this.state.value}
+					getUser={this.getUser.bind(this)}
 					handleCommand={this.handleCommand.bind(this)}
 					commandHistory={this.state.commandHistory}
 					lastHistory={this.lastHistory.bind(this)}
