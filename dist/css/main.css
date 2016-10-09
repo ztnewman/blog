@@ -5,13 +5,13 @@ button,hr,input{overflow:visible}audio,canvas,progress,video{display:inline-bloc
 	font-size: 12px;
 }
 
-.app-container {
-	height: 100vh;
+#app {
+
 }
 
 .terminal {
-	position: relative;
-	height: 100%;
+	position: absolute;
+	top: 0; right: 0; bottom: 0; left: 0;
 	padding: 20px;
 	cursor: text;
 }
@@ -60,4 +60,9 @@ button,hr,input{overflow:visible}audio,canvas,progress,video{display:inline-bloc
 
 .terminal__command__caret {
 	background: grey;
+	/*animation: blink 1000ms step-end infinite;*/
+}
+
+@keyframes blink {
+	50% { opacity: 0; }
 }

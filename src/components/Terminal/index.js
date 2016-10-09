@@ -37,11 +37,6 @@ export default class Terminal extends React.Component {
 	}
 
 	// handlers
-	handleClick(e) {
-		if (e.target.className == 'terminal') {
-			this.refs.Input.focusInput();
-		}
-	}
 	handleKeyDown(e) {
 		this.refs.Input.focusInput();
 	}
@@ -105,7 +100,6 @@ export default class Terminal extends React.Component {
 			<div
 				className="terminal"
 				tabIndex="1"
-				onClick={this.handleClick.bind(this)}
 				onKeyDown={this.handleKeyDown.bind(this)} >
 				<Header />
 				{this.isValidDirectory(this.props.path) ? null :
