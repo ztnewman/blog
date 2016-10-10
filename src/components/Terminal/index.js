@@ -20,9 +20,6 @@ export default class Terminal extends React.Component {
 	setValue(value) {
 		this.setState({value});
 	}
-	setCurrentDirectory(dir) {
-		this.currentDirectory = dir;
-	}
 	isValidDirectory(dir) {
 		if (!dir)
 			dir = this.currentDirectory;
@@ -111,7 +108,6 @@ export default class Terminal extends React.Component {
 				<History
 					commandHistory={this.state.commandHistory}
 					currentDirectory={this.currentDirectory}
-					cd={this.setCurrentDirectory.bind(this)}
 					isValidDirectory={this.isValidDirectory.bind(this)}
 					getUser={this.getUser.bind(this)} />
 				<Input

@@ -10,9 +10,7 @@ export default class Help extends React.Component {
 				<p>Some commands available to you are:</p>
 				<ul>
 					<li>ls</li>
-					<li>cd</li>
 					<li>clear</li>
-					<li>cat</li>
 				</ul>
 			</div>
 		);
