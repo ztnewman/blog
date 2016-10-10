@@ -1,2 +1,0 @@
-#!/bin/bash
-webpack -p --config ./config/webpack.config.prod.js
